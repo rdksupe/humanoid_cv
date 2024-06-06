@@ -1,7 +1,7 @@
 import cv2
 from scenedetect import VideoManager, SceneManager
 from scenedetect.detectors import AdaptiveDetector
-from moviepy.editor import concatenate_videoclips, VideoFileClip
+from moviepy.editor import concatenate_videoclips, VideoFileClip,AudioFileClip
 import numpy as np
 
 def detect_scenes(video_path, threshold=30.0, min_scene_length=5):
@@ -51,9 +51,15 @@ def create_highlight_reel(video_path, output_path, scene_list, highlight_duratio
 
     
     final_clip = concatenate_videoclips(video_clips, method="compose", padding=-crossfade_duration)
+    final_clip = final_clip.without_audio()
+    new_audio = AudioFileClip(audio_path)
+    final_clip = final_clip.set_audio(new_audio)
+
     
    
     final_clip = final_clip.resize(newsize=(720, 1280))
+
+
     
    
     final_clip.write_videofile(output_path, codec='libx264', fps=30)
@@ -61,9 +67,9 @@ def create_highlight_reel(video_path, output_path, scene_list, highlight_duratio
 
 
 
-
+audio_path = 'C:/Users/rishi/humanoid/music1.mp3'
 video_path = 'C:/Users/rishi/humanoid/robot.mp4'
-output_path = 'C:/Users/rishi/humanoid/edited89.mp4'
+output_path = 'C:/Users/rishi/humanoid/edited90.mp4'
 scene_list = detect_scenes(video_path)
 print(scene_list)
 create_highlight_reel(video_path, output_path, scene_list)
